@@ -11,7 +11,7 @@ const options =
 	/**
 	 * Change the file name of the output file here.
 	 */
-	filename: "my-plugin.js",
+	filename: "lift-hill-maximizer.js",
 
 	/**
 	 * Determines in what build mode the plugin should be build. The default here takes
@@ -31,10 +31,8 @@ const options =
  * > git update-index --no-skip-worktree rollup.config.js
  * ```
  */
-async function getOutput()
-{
-	if (options.build !== "development")
-	{
+async function getOutput() {
+	if (options.build !== "development") {
 		return `./dist/${options.filename}`;
 	}
 

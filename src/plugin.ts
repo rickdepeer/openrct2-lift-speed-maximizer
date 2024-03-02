@@ -1,19 +1,40 @@
 /// <reference path="../lib/openrct2.d.ts" />
 
-import { startup } from "./startup";
+var ridesAlreadySet: number[] = [];
+
+var setMaxLiftSpeedForAllRides = function (force: boolean = false) {
+	map.rides.forEach((ride) => {
+		if (force || !ridesAlreadySet.some((id) => ride.id === id)) {
+			ride.liftHillSpeed = ride.maxLiftHillSpeed;
+			ridesAlreadySet.push(ride.id);
+		}
+	})
+};
+
+var main = function () {
+	ui.registerMenuItem("Lift Speed Maximizer", function () {
+		let error = null;
+		try {
+			setMaxLiftSpeedForAllRides(true);
+		} catch (e) {
+			error = e
+		} finally {
+			if (typeof ui !== "undefined") {
+				ui.showError('Lift Speed Maximizer', error instanceof Error ? error.message : 'Max lift hill speeds set for all rides!');
+			}
+		}
+	});
+
+	context.subscribe("interval.day", setMaxLiftSpeedForAllRides)
+};
+
 
 registerPlugin({
-	name: "Name of your plugin",
-	version: "1.0",
-	authors: [ "Your name" ],
-	type: "remote",
+	name: 'Lift Speed Maximizer',
+	version: '1.0',
+	authors: ['Rick Fransen'],
+	type: 'remote',
+	main: main,
 	licence: "MIT",
-	/**
-	 * This field determines which OpenRCT2 API version to use. It's best to always use the
-	 * latest release version, unless you want to use specific versions from a newer develop
-	 * version. Version 70 equals the v0.4.4 release.
-	 * @see https://github.com/OpenRCT2/OpenRCT2/blob/v0.4.4/src/openrct2/scripting/ScriptEngine.h#L50
-	 */
-	targetApiVersion: 70,
-	main: startup,
+	targetApiVersion: 0
 });
