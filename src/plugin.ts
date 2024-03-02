@@ -1,17 +1,8 @@
 /// <reference path="../lib/openrct2.d.ts" />
 
-var ridesAlreadySet: number[] = [];
+const ridesAlreadySet: number[] = [];
 
-var setMaxLiftSpeedForAllRides = function (force: boolean = false) {
-	map.rides.forEach((ride) => {
-		if (force || !ridesAlreadySet.some((id) => ride.id === id)) {
-			ride.liftHillSpeed = ride.maxLiftHillSpeed;
-			ridesAlreadySet.push(ride.id);
-		}
-	})
-};
-
-var main = function () {
+const main = function () {
 	ui.registerMenuItem("Lift Speed Maximizer", function () {
 		let error = null;
 		try {
@@ -28,13 +19,21 @@ var main = function () {
 	context.subscribe("interval.day", setMaxLiftSpeedForAllRides)
 };
 
+function setMaxLiftSpeedForAllRides(force: boolean = false) {
+	map.rides.forEach((ride) => {
+		if (force || !ridesAlreadySet.some((id) => ride.id === id)) {
+			ride.liftHillSpeed = ride.maxLiftHillSpeed;
+			ridesAlreadySet.push(ride.id);
+		}
+	})
+};
 
 registerPlugin({
 	name: 'Lift Speed Maximizer',
 	version: '1.0',
 	authors: ['Rick Fransen'],
 	type: 'remote',
-	main: main,
 	licence: "MIT",
-	targetApiVersion: 0
+	targetApiVersion: 0,
+	main: main
 });
